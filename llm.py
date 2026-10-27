@@ -13,14 +13,26 @@ def get_llm():
     model = os.getenv("LLM_MODEL") or None
 
     if provider == "openai":
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key or api_key.strip() in ("", "paste_your_key_here"):
+            raise ValueError("Missing OPENAI_API_KEY. Please set your key in .env or cloud secrets.")
         from langchain_openai import ChatOpenAI
-        return ChatOpenAI(model=model or "gpt-4o-mini", temperature=0.3)
+        return ChatOpenAI(model=model or "gpt-4o-mini", api_key=api_key, temperature=0.3)
+
     if provider == "anthropic":
+        api_key = os.getenv("ANTHROPIC_API_KEY")
+        if not api_key or api_key.strip() in ("", "paste_your_key_here"):
+            raise ValueError("Missing ANTHROPIC_API_KEY. Please set your key in .env or cloud secrets.")
         from langchain_anthropic import ChatAnthropic
-        return ChatAnthropic(model=model or "claude-haiku-5-5", temperature=0.3, max_tokens=2000)
+        return ChatAnthropic(model=model or "claude-haiku-5-5", api_key=api_key, temperature=0.3, max_tokens=2000)
+
     if provider == "gemini":
+        api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+        if not api_key or api_key.strip() in ("", "paste_your_key_here"):
+            raise ValueError("Missing Gemini API key. Set GEMINI_API_KEY or GOOGLE_API_KEY in .env or cloud secrets.")
         from langchain_google_genai import ChatGoogleGenerativeAI
-        return ChatGoogleGenerativeAI(model=model or "gemini-2.5-flash", temperature=0.3)
+        return ChatGoogleGenerativeAI(model=model or "gemini-2.5-flash", api_key=api_key, temperature=0.3)
+
     raise ValueError(f"Unknown LLM_PROVIDER '{provider}'. Use gemini, openai or anthropic.")
 
 
