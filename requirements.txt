@@ -1,0 +1,10 @@
+langgraph>=0.2
+langchain-core>=0.3
+langchain-google-genai>=2.0
+langchain-openai>=0.2
+langchain-anthropic>=0.3
+streamlit>=1.38
+requests>=2.31
+python-dotenv>=1.0
+ddgs>=9.0
+pytest>=8.0
